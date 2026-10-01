@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LegalEase - AI Legal Document Generator</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="topbar">
+        <div>
+            <h1>⚖ LegalEase</h1>
+            <p>AI-Powered Legal Document Generator</p>
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Legal Notice -->
+        <div class="notice">
+            <strong>Important:</strong>
+            LegalEase creates AI-assisted drafts.
+            It is not a law firm and the generated content is not a substitute
+            for advice from a qualified lawyer.
+        </div>
+
+
+        <section class="grid">
+
+
+            <!-- ========================= -->
+            <!-- DOCUMENT FORM -->
+            <!-- ========================= -->
+
+            <form id="documentForm" class="card">
+
+                <h2>1. Document Details</h2>
+
+
+                <!-- Document Type -->
+                <label for="document_type">
+                    Document Type
+                </label>
+
+                <select
+                    name="document_type"
+                    id="document_type"
+                    required
+                >
+
+                    {% for key, label in document_types.items() %}
+
+                        <option value="{{ key }}">
+                            {{ label }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                <!-- Parties -->
+                <div class="two">
+
+                    <div>
+
+                        <label for="party_a">
+                            Party A
+                        </label>
+
+                        <input
+                            type="text"
+                            id="party_a"
+                            name="party_a"
+                            required
+                            placeholder="Employer / Disclosing Party / Landlord"
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="party_b">
+                            Party B
+                        </label>
+
+                        <input
+                            type="text"
+                            id="party_b"
+                            name="party_b"
+                            required
+                            placeholder="Employee / Receiving Party / Tenant"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Effective Date -->
+                <label for="effective_date">
+                    Effective Date
+                </label>
+
+                <input
+                    type="date"
+                    id="effective_date"
+                    name="effective_date"
+                    required
+                >
+
+
+                <!-- ========================= -->
+                <!-- EMPLOYMENT FIELDS -->
+                <!-- ========================= -->
+
+                <div id="employmentFields">
+
+                    <label for="role">
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        id="role"
+                        name="role"
+                        placeholder="Software Developer"
+                    >
+
+
+                    <label for="compensation">
+                        Compensation
+                    </label>
+
+                    <input
+                        type="text"
+                        id="compensation"
+                        name="compensation"
+                        placeholder="₹50,000 per month"
+                    >
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- NDA FIELDS -->
+                <!-- ========================= -->
+
+                <div id="ndaFields" class="hidden">
+
+                    <label for="confidentiality_scope">
+                        Confidentiality Scope
+                    </label>
+
+                    <textarea
+                        id="confidentiality_scope"
+                        name="confidentiality_scope"
+                        placeholder="Describe information to be protected"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- ========================= -->
+                <!-- LEASE FIELDS -->
+                <!-- ========================= -->
+
+                <div id="leaseFields" class="hidden">
+
+                    <label for="address">
+                        Property Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        placeholder="Full property address"
+                    ></textarea>
+
+
+                    <div class="two">
+
+                        <div>
+
+                            <label for="lease_term">
+                                Lease Term
+                            </label>
+
+                            <input
+                                type="text"
+                                id="lease_term"
+                                name="lease_term"
+                                placeholder="11 months"
+                            >
+
+                        </div>
+
+
+                        <div>
+
+                            <label for="monthly_rent">
+                                Monthly Rent
+                            </label>
+
+                            <input
+                                type="text"
+                                id="monthly_rent"
+                                name="monthly_rent"
+                                placeholder="₹20,000"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Key Terms -->
+                <label for="key_terms">
+                    Key Terms
+                </label>
+
+                <textarea
+                    id="key_terms"
+                    name="key_terms"
+                    placeholder="Notice period, special conditions, payment terms, etc."
+                ></textarea>
+
+
+                <!-- Company Name -->
+                <label for="company_name">
+                    Company / Brand Name
+                </label>
+
+                <input
+                    type="text"
+                    id="company_name"
+                    name="company_name"
+                    placeholder="AREC Technologies Pvt Ltd"
+                >
+
+
+                <!-- Logo -->
+                <label for="logo">
+                    Company Logo (PNG/JPG, max 2 MB)
+                </label>
+
+                <input
+                    type="file"
+                    id="logo"
+                    name="logo"
+                    accept=".png,.jpg,.jpeg"
+                >
+
+
+                <!-- Custom Instructions -->
+                <label for="custom_instructions">
+                    Custom Instructions
+                </label>
+
+                <textarea
+                    id="custom_instructions"
+                    name="custom_instructions"
+                    placeholder="Optional instructions for the AI draft"
+                ></textarea>
+
+
+                <!-- Generate Button -->
+                <button
+                    type="submit"
+                    id="generateBtn"
+                >
+                    ✨ Generate Document
+                </button>
+
+
+                <!-- Status -->
+                <p
+                    id="status"
+                    class="status"
+                ></p>
+
+            </form>
+
+
+
+            <!-- ========================= -->
+            <!-- PREVIEW SECTION -->
+            <!-- ========================= -->
+
+            <section class="card preview-card">
+
+                <div class="preview-head">
+
+                    <h2>
+                        2. Editable Preview
+                    </h2>
+
+
+                    <div class="actions">
+
+                        <button
+                            class="small export-btn"
+                            type="button"
+                            data-format="pdf"
+                            disabled
+                        >
+                            PDF
+                        </button>
+
+
+                        <button
+                            class="small export-btn"
+                            type="button"
+                            data-format="docx"
+                            disabled
+                        >
+                            DOCX
+                        </button>
+
+
+                        <button
+                            class="small export-btn"
+                            type="button"
+                            data-format="txt"
+                            disabled
+                        >
+                            TXT
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Generated document -->
+                <textarea
+                    id="preview"
+                    placeholder="Your generated document will appear here..."
+                ></textarea>
+
+
+                <!-- Terms -->
+                <h3>
+                    Automatic Term Table
+                </h3>
+
+
+                <table id="termsTable">
+
+                    <thead>
+
+                        <tr>
+                            <th>Term</th>
+                            <th>Value</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="termsBody">
+                    </tbody>
+
+                </table>
+
+
+                <!-- Notice -->
+                <div
+                    id="notice"
+                    class="notice compact"
+                >
+                    Generate a document to enable exports.
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- Main JavaScript -->
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+
+</body>
+
+</html>
